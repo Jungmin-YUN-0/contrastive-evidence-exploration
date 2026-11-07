@@ -66,13 +66,12 @@ cache/output paths. Online generation caches are under `artifacts/cache/`.
 ## Experiment recipes
 
 The launcher resolves relative paths from this directory. It defaults to all three
-benchmarks; specify `--datasets` to restrict a run. Preview commands using
-`--dry_run`, then omit it to execute:
+benchmarks; specify `--datasets` to restrict a run:
 
 ```bash
-python scripts/run.py --stage index --datasets [musique/hotpotqa/2wikimultihopqa] --dry_run
-python scripts/run.py --stage retrieve --datasets [musique/hotpotqa/2wikimultihopqa] --dry_run
-python scripts/run.py --stage qa --datasets [musique/hotpotqa/2wikimultihopqa] --dry_run
+python scripts/run.py --stage index --datasets [musique/hotpotqa/2wikimultihopqa]
+python scripts/run.py --stage retrieve --datasets [musique/hotpotqa/2wikimultihopqa]
+python scripts/run.py --stage qa --datasets [musique/hotpotqa/2wikimultihopqa]
 ```
 
 ## Export metrics
