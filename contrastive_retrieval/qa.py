@@ -9,7 +9,6 @@ from .data import answer_aliases, normalize_doc, read_records, sample_passages, 
 
 
 def normalize_answer(text):
-    """Keep the supplied evaluation script's English answer normalization."""
     text = re.sub(r"[^0-9a-z ]+", " ", str(text).lower())
     return " ".join(re.sub(r"\b(a|an|the)\b", " ", text).split())
 
@@ -161,7 +160,7 @@ def main():
     try:
         samples = read_records(args.dataset_dir / f"{args.dataset}.json")
         rows = gold_retrieval(samples) if args.gold else json.loads(args.retrieval.read_text(encoding="utf-8"))["per_query"]
-        # Validate alignment and gold answers before allocating the reader model.
+
         for sample in align_samples(rows, samples):
             answer_aliases(sample)
         prompts = build_prompts(rows, args.topk_docs)
