@@ -37,7 +37,6 @@ Return format:
 
 
 def atomic_json(path: Path, value: Any) -> None:
-    """Commit a complete JSON file; interrupted writes leave the old file intact."""
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary = None
     try:
@@ -136,9 +135,7 @@ def precomputed_facets(corpus: list[dict[str, Any]]) -> list[list[str]]:
             key = next((key for key in ("const_query", "all_queries_by_doc") if key in doc), None)
             if key is None:
                 if "kept_queries_by_doc" in doc:
-                    raise ValueError(
-                        f"Document {position} only has legacy kept_queries_by_doc;"
-                    )
+                    raise ValueError(f"Document {position} only has legacy kept_queries_by_doc;")
                 raise ValueError(f"Document {position} has no precomputed facet queries.")
             queries = parse_queries(doc[key])
         result.append(queries)
@@ -162,7 +159,6 @@ def encode(texts: list[str], model: Any, *, prefix: str, batch_size: int) -> np.
 
 
 def nearest_neighbors(embeddings: np.ndarray, k: int = 10, batch_size: int = 256) -> list[list[int]]:
-    """Exact cosine neighbors, explicitly removing self even when vectors tie."""
     embeddings = np.asarray(embeddings, dtype=np.float32)
     if embeddings.ndim != 2 or not len(embeddings) or embeddings.shape[1] == 0:
         raise ValueError("embeddings must have shape (number of documents, dimension).")
@@ -415,8 +411,8 @@ def main(argv: list[str] | None = None) -> None:
                 "query_max_tokens", "generation_batch_size", "max_generation_attempts")
     if any(getattr(args, key) <= 0 for key in positive):
         parser.error("Batch sizes, lengths, neighbor count, and tensor parallel size must be positive.")
-    if args.max_docs < 0 or not 0 <= args.seed < 2**32:
-        parser.error("--max_docs must be nonnegative and --seed must be in [0, 2**32).")
+    if args.max_docs < 0:
+        parser.error("--max_docs must be nonnegative.")
     if not np.isfinite(args.query_temperature) or args.query_temperature < 0 or not 0 < args.query_top_p <= 1:
         parser.error("Query temperature must be finite and nonnegative; top_p must be in (0, 1].")
     if not 0 < args.gpu_memory_utilization <= 1:
@@ -429,8 +425,6 @@ def main(argv: list[str] | None = None) -> None:
     output_path = (args.output_file or Path("artifacts/indexes") / f"{args.dataset}.json").expanduser().resolve()
     args.query_cache = (args.query_cache or output_path.with_suffix(".queries.json")).expanduser().resolve()
     metadata_path = output_path.with_suffix(".meta.json")
-    if len({input_path, output_path, args.query_cache, metadata_path}) != 4:
-        parser.error("Input, index, query cache, and metadata paths must be different.")
     random.seed(args.seed)
     np.random.seed(args.seed)
     try:
