@@ -74,8 +74,6 @@ python scripts/run.py --stage retrieve --datasets [musique/hotpotqa/2wikimultiho
 python scripts/run.py --stage qa --datasets [musique/hotpotqa/2wikimultihopqa]
 ```
 
-## Export metrics
-
 ```bash
 python -m contrastive_retrieval.report \
   "<retrieved_file_path>" \
